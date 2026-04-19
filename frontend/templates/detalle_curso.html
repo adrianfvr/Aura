@@ -1,0 +1,50 @@
+{% extends 'base.html' %} {% block content %}
+
+<div class="row">
+  <!-- Imagen -->
+  <div class="col-md-8">
+    <div class="card shadow-sm mb-4">
+      {% if curso.imagen %}
+      <img
+        src="{{ curso.imagen.url }}"
+        style="height: 350px; object-fit: cover"
+      />
+      {% endif %}
+
+      <div class="card-body">
+        <h2 class="fw-bold">{{ curso.titulo }}</h2>
+
+        <p class="text-muted">Creado por {{ curso.instructor.username }}</p>
+
+        <hr />
+
+        <p>{{ curso.descripcion }}</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Panel lateral -->
+  <div class="col-md-4">
+    <div class="card shadow-sm p-3">
+      {% if user.is_authenticated %} {% if inscrito %}
+      <button class="btn btn-success w-100 mb-2">Ya estás inscrito</button>
+      {% else %}
+      <a href="/inscribirse/{{ curso.id }}/" class="btn btn-primary w-100 mb-2">
+        Inscribirse
+      </a>
+      {% endif %} {% else %}
+      <a href="/login/" class="btn btn-secondary w-100"> Inicia sesión </a>
+      {% endif %}
+
+      <hr />
+
+      <p class="small text-muted">
+        Acceso completo al curso<br />
+        Disponible de por vida<br />
+        Certificado incluido (opcional 😉)
+      </p>
+    </div>
+  </div>
+</div>
+
+{% endblock %}

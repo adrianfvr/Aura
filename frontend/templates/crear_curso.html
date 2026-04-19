@@ -1,0 +1,55 @@
+{% extends 'base.html' %} {% block content %}
+
+<div
+  class="d-flex justify-content-center align-items-center"
+  style="min-height: 80vh"
+>
+  <div class="card shadow-lg p-4" style="width: 500px">
+    <h3 class="text-center mb-4 fw-bold">Crear Curso</h3>
+
+    <form method="post" enctype="multipart/form-data">
+      {% csrf_token %}
+
+      <div class="mb-3">
+        <label class="form-label">Título</label>
+        {{ form.titulo }}
+      </div>
+
+      <div class="mb-3">
+        <label class="form-label">Descripción</label>
+        {{ form.descripcion }}
+      </div>
+
+      <div class="mb-3">
+        <label class="form-label">Imagen</label>
+        <img
+          id="preview"
+          style="
+            width: 100%;
+            border-radius: 10px;
+            margin-top: 10px;
+            display: none;
+          "
+        />
+        {{ form.imagen }}
+      </div>
+
+      <button class="btn btn-primary w-100 mt-2">Crear</button>
+    </form>
+  </div>
+  <script>
+    const input = document.querySelector('input[type="file"]');
+    const preview = document.getElementById("preview");
+
+    input.addEventListener("change", function () {
+      const file = this.files[0];
+
+      if (file) {
+        preview.style.display = "block";
+        preview.src = URL.createObjectURL(file);
+      }
+    });
+  </script>
+</div>
+
+{% endblock %}

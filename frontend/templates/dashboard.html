@@ -1,0 +1,33 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<h3 class="mb-4">Mis cursos</h3>
+
+<div class="row">
+    {% for inscripcion in inscripciones %}
+        <div class="col-md-3">
+            <div class="card shadow-sm mb-4">
+
+                {% if inscripcion.curso.imagen %}
+                    <img src="{{ inscripcion.curso.imagen.url }}">
+                {% endif %}
+
+                <div class="card-body">
+                    <h6 class="fw-bold">{{ inscripcion.curso.titulo }}</h6>
+
+                    <div class="progress mb-2" style="height:5px;">
+                        <div class="progress-bar" style="width: 50%;"></div>
+                    </div>
+
+                    <small class="text-muted">En progreso</small>
+                </div>
+
+            </div>
+        </div>
+    {% empty %}
+        <p>No tienes cursos aún.</p>
+    {% endfor %}
+</div>
+
+{% endblock %}
