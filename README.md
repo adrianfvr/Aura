@@ -115,18 +115,28 @@ plataforma/
 ---
 
 ## Capturas
+> Inicio Sesión
+<img width="500" alt="login" src="https://github.com/user-attachments/assets/14b13117-57c6-462e-91e4-78b26474b1d0" />
 
-> Puedes agregar aquí imágenes de la plataforma:
-> ```
-> ![Catálogo](media/ejemplo_catalogo.png)
-> ```
+> Dashboard
+<img width="500" alt="dashboard" src="https://github.com/user-attachments/assets/44969ffe-0fef-420f-b068-fca91d6fa689" />
+
+> Mis Cursos
+<img width="500" alt="mis-cursos" src="https://github.com/user-attachments/assets/b36e3c28-2fe5-41d2-b98c-0e5f5247d846" />
+
+> Detalle Curso
+<img width="500" alt="detalle-curso" src="https://github.com/user-attachments/assets/b4f86361-12df-48e4-9de0-f2b38f96e6db" />
+
+> Crear Curso
+<img width="500" alt="crear-curso" src="https://github.com/user-attachments/assets/72b1f784-1406-4edf-8d17-884f16c72b0b" />
+
 
 ---
 
 ## Estado del proyecto
 
 > [!WARNING]
-> El proyecto está actualmente en desarrollo. No se recomienda usarlo en producción sin antes configurar PostgreSQL, variables de entorno y un servidor como Nginx + Gunicorn.
+> El proyecto está actualmente en desarrollo. No se recomienda usarlo en producción sin antes configurar PostgreSQL, variables de entorno y un servidor.
 
 - [x] Registro y autenticación de usuarios
 - [x] Catálogo de cursos con búsqueda
