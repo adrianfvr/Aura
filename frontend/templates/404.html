@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+{% block page_title %}Página no encontrada{% endblock %}
+{% block topbar_title %}404{% endblock %}
+
+{% block content %}
+<div style="display:flex; flex-direction:column; align-items:center; justify-content:center; min-height:65vh; text-align:center; gap:16px;">
+  <div style="font-family:'Space Mono',monospace; font-size:80px; font-weight:700; color:var(--border-2); line-height:1;">
+    404
+  </div>
+  <h2 style="font-size:18px; font-weight:500; color:var(--white); margin:0;">Página no encontrada</h2>
+  <p style="color:var(--text-3); font-size:13px; max-width:340px; line-height:1.6; margin:0;">
+    La ruta que buscas no existe o fue movida.
+  </p>
+  <div style="display:flex; gap:10px; margin-top:8px;">
+    <a href="/" class="xo-btn xo-btn-primary">
+      <i class="ti ti-home"></i> Ir al inicio
+    </a>
+    <a href="javascript:history.back()" class="xo-btn">
+      <i class="ti ti-arrow-left"></i> Volver
+    </a>
+  </div>
+</div>
+{% endblock %}

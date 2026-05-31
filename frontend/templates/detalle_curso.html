@@ -1,50 +1,137 @@
-{% extends 'base.html' %} {% block content %}
+{% extends 'base.html' %}
+{% block page_title %}{{ curso.titulo }}{% endblock %}
+{% block topbar_title %}{{ curso.titulo }}{% endblock %}
 
-<div class="row">
-  <!-- Imagen -->
-  <div class="col-md-8">
-    <div class="card shadow-sm mb-4">
+{% block content %}
+<div class="row g-4">
+
+  <!-- Contenido principal -->
+  <div class="col-lg-8">
+    <div class="xo-card" style="overflow:hidden;">
       {% if curso.imagen %}
-      <img
-        src="{{ curso.imagen.url }}"
-        style="height: 350px; object-fit: cover"
-      />
+      <img src="{{ curso.imagen.url }}" class="xo-course-img" style="height:320px;" />
+      {% else %}
+      <div class="xo-course-img-placeholder" style="height:280px;">
+        <i class="ti ti-book" style="font-size:52px;"></i>
+      </div>
       {% endif %}
 
-      <div class="card-body">
-        <h2 class="fw-bold">{{ curso.titulo }}</h2>
+      <div class="xo-card-body">
+        <div class="xo-card-label">
+          <i class="ti ti-user" style="font-size:10px;"></i>
+          {{ curso.instructor.username }}
+          {% if curso.instructor.es_instructor %}· Instructor{% endif %}
+        </div>
+        <h1 style="font-size:22px; font-weight:500; color:var(--white); margin:6px 0 16px; line-height:1.3;">
+          {{ curso.titulo }}
+        </h1>
 
-        <p class="text-muted">Creado por {{ curso.instructor.username }}</p>
+        <div style="display:flex; gap:20px; margin-bottom:20px;">
+          <span style="font-size:12px; color:var(--text-3); display:flex; align-items:center; gap:5px;">
+            <i class="ti ti-users" style="font-size:13px;"></i>
+            {{ curso.total_inscritos }} estudiantes
+          </span>
+          <span style="font-size:12px; color:var(--text-3); display:flex; align-items:center; gap:5px;">
+            <i class="ti ti-calendar" style="font-size:13px;"></i>
+            {{ curso.fecha_creacion|date:"d \d\e F, Y" }}
+          </span>
+        </div>
 
-        <hr />
-
-        <p>{{ curso.descripcion }}</p>
+        <hr class="divider" />
+        <p style="color:var(--text-2); line-height:1.8; font-size:14px;">{{ curso.descripcion }}</p>
       </div>
     </div>
   </div>
 
   <!-- Panel lateral -->
-  <div class="col-md-4">
-    <div class="card shadow-sm p-3">
-      {% if user.is_authenticated %} {% if inscrito %}
-      <button class="btn btn-success w-100 mb-2">Ya estás inscrito</button>
-      {% else %}
-      <a href="/inscribirse/{{ curso.id }}/" class="btn btn-primary w-100 mb-2">
-        Inscribirse
-      </a>
-      {% endif %} {% else %}
-      <a href="/login/" class="btn btn-secondary w-100"> Inicia sesión </a>
-      {% endif %}
+  <div class="col-lg-4">
+    <div class="xo-card" style="position:sticky; top:76px;">
+      <div class="xo-card-body">
+        <div class="xo-card-label">Acceso</div>
 
-      <hr />
+        {% if user.is_authenticated %}
+          {% if inscrito %}
+          <div style="margin-bottom:16px;">
+            <div style="display:flex; justify-content:space-between; margin-bottom:6px; font-size:12px; color:var(--text-3);">
+              <span>Tu progreso</span>
+              <span style="font-family:'Space Mono',monospace;">{{ inscripcion.progreso }}%</span>
+            </div>
+            <div class="xo-progress">
+              <div class="xo-progress-bar {% if inscripcion.completado %}green{% endif %}"
+                   style="width:{{ inscripcion.progreso }}%;"></div>
+            </div>
+          </div>
 
-      <p class="small text-muted">
-        Acceso completo al curso<br />
-        Disponible de por vida<br />
-        Certificado incluido (opcional 😉)
-      </p>
+          <button class="xo-btn xo-btn-success xo-btn-lg" style="width:100%; margin-bottom:10px;" disabled>
+            <i class="ti ti-circle-check"></i> Inscrito
+          </button>
+
+          <form method="post" action="/curso/{{ curso.id }}/progreso/" style="margin-bottom:10px;">
+            {% csrf_token %}
+            <div style="display:flex; gap:8px; align-items:center;">
+              <input
+                type="range" name="progreso" min="0" max="100" step="10"
+                value="{{ inscripcion.progreso }}"
+                style="flex:1; accent-color:var(--white);"
+                oninput="this.nextElementSibling.textContent = this.value + '%'"
+              />
+              <span style="font-family:'Space Mono',monospace; font-size:11px; color:var(--text-3); min-width:32px; text-align:right;">
+                {{ inscripcion.progreso }}%
+              </span>
+            </div>
+            <button type="submit" class="xo-btn xo-btn-sm" style="width:100%; margin-top:8px;">
+              <i class="ti ti-device-floppy"></i> Guardar progreso
+            </button>
+          </form>
+
+          <form method="post" action="/desinscribirse/{{ curso.id }}/">
+            {% csrf_token %}
+            <button type="submit" class="xo-btn xo-btn-danger xo-btn-sm" style="width:100%;">
+              <i class="ti ti-x"></i> Desinscribirse
+            </button>
+          </form>
+
+          {% else %}
+          <a href="/inscribirse/{{ curso.id }}/" class="xo-btn xo-btn-primary xo-btn-lg" style="width:100%; margin-bottom:10px;">
+            <i class="ti ti-plus"></i> Inscribirse gratis
+          </a>
+          {% endif %}
+
+        {% else %}
+        <a href="/login/?next=/curso/{{ curso.id }}/" class="xo-btn xo-btn-lg" style="width:100%; margin-bottom:10px;">
+          <i class="ti ti-lock"></i> Inicia sesión para inscribirte
+        </a>
+        {% endif %}
+
+        <hr class="divider" />
+
+        <div style="display:flex; flex-direction:column; gap:10px;">
+          <div style="display:flex; align-items:center; gap:10px; font-size:12px; color:var(--text-3);">
+            <i class="ti ti-infinity" style="font-size:15px;"></i>
+            <span>Acceso de por vida</span>
+          </div>
+          <div style="display:flex; align-items:center; gap:10px; font-size:12px; color:var(--text-3);">
+            <i class="ti ti-certificate" style="font-size:15px;"></i>
+            <span>Certificado al completar</span>
+          </div>
+          <div style="display:flex; align-items:center; gap:10px; font-size:12px; color:var(--text-3);">
+            <i class="ti ti-device-laptop" style="font-size:15px;"></i>
+            <span>Acceso desde cualquier dispositivo</span>
+          </div>
+          <div style="display:flex; align-items:center; gap:10px; font-size:12px; color:var(--text-3);">
+            <i class="ti ti-users" style="font-size:15px;"></i>
+            <span>{{ curso.total_inscritos }} estudiantes inscritos</span>
+          </div>
+        </div>
+
+        {% if user.is_authenticated and user == curso.instructor %}
+        <hr class="divider" />
+        <a href="/curso/{{ curso.id }}/editar/" class="xo-btn xo-btn-sm" style="width:100%;">
+          <i class="ti ti-edit"></i> Editar este curso
+        </a>
+        {% endif %}
+      </div>
     </div>
   </div>
 </div>
-
 {% endblock %}

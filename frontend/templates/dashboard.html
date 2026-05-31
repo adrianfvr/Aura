@@ -1,33 +1,167 @@
 {% extends 'base.html' %}
+{% block page_title %}Dashboard{% endblock %}
+{% block topbar_title %}Dashboard{% endblock %}
 
 {% block content %}
 
-<h3 class="mb-4">Mis cursos</h3>
-
-<div class="row">
-    {% for inscripcion in inscripciones %}
-        <div class="col-md-3">
-            <div class="card shadow-sm mb-4">
-
-                {% if inscripcion.curso.imagen %}
-                    <img src="{{ inscripcion.curso.imagen.url }}">
-                {% endif %}
-
-                <div class="card-body">
-                    <h6 class="fw-bold">{{ inscripcion.curso.titulo }}</h6>
-
-                    <div class="progress mb-2" style="height:5px;">
-                        <div class="progress-bar" style="width: 50%;"></div>
-                    </div>
-
-                    <small class="text-muted">En progreso</small>
-                </div>
-
-            </div>
-        </div>
-    {% empty %}
-        <p>No tienes cursos aún.</p>
-    {% endfor %}
+<div class="row g-3 mb-4">
+  <div class="col-6 col-md-3">
+    <div class="xo-stat">
+      <div class="xo-card-label">Inscritos</div>
+      <div class="xo-stat-val">{{ total }}</div>
+      <div class="xo-stat-sub">cursos en total</div>
+    </div>
+  </div>
+  <div class="col-6 col-md-3">
+    <div class="xo-stat">
+      <div class="xo-card-label">Completados</div>
+      <div class="xo-stat-val" style="color:var(--green);">{{ completados }}</div>
+      <div class="xo-stat-sub">finalizados</div>
+    </div>
+  </div>
+  <div class="col-6 col-md-3">
+    <div class="xo-stat">
+      <div class="xo-card-label">En progreso</div>
+      <div class="xo-stat-val" style="color:var(--yellow);">{{ en_progreso }}</div>
+      <div class="xo-stat-sub">activos</div>
+    </div>
+  </div>
+  <div class="col-6 col-md-3">
+    <div class="xo-stat">
+      <div class="xo-card-label">Promedio</div>
+      <div class="xo-stat-val">{{ promedio }}<span style="font-size:14px; color:var(--text-3);">%</span></div>
+      <div class="xo-stat-sub">progreso general</div>
+    </div>
+  </div>
 </div>
+
+<!-- Mis cursos -->
+<div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:16px;">
+  <div>
+    <h2 style="font-size:16px; font-weight:500; color:var(--white); margin:0;">Mis cursos</h2>
+  </div>
+</div>
+
+{% if inscripciones %}
+<div class="row g-3 mb-5">
+  {% for ins in inscripciones %}
+  <div class="col-xl-3 col-lg-4 col-md-6">
+    <div class="xo-card" style="overflow:hidden;">
+      <a href="/curso/{{ ins.curso.id }}/" style="text-decoration:none; display:block;">
+        {% if ins.curso.imagen %}
+        <img src="{{ ins.curso.imagen.url }}" class="xo-course-img" style="height:130px;" />
+        {% else %}
+        <div class="xo-course-img-placeholder" style="height:130px;">
+          <i class="ti ti-book" style="font-size:28px;"></i>
+        </div>
+        {% endif %}
+      </a>
+      <div class="xo-card-body">
+        <h3 style="font-size:13px; font-weight:500; color:var(--white); margin:0 0 10px; line-height:1.4;">
+          {{ ins.curso.titulo }}
+        </h3>
+
+        <div style="margin-bottom:8px;">
+          <div class="xo-progress">
+            <div class="xo-progress-bar {% if ins.completado %}green{% endif %}"
+                 style="width:{{ ins.progreso }}%;"></div>
+          </div>
+        </div>
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
+          <span style="font-size:11px; color:var(--text-3);">
+            {% if ins.completado %}
+            <i class="ti ti-circle-check" style="font-size:12px; color:var(--green);"></i> Completado
+            {% elif ins.progreso > 0 %}
+            En progreso
+            {% else %}
+            Sin iniciar
+            {% endif %}
+          </span>
+          <span style="font-family:'Space Mono',monospace; font-size:11px; color:var(--text-2);">
+            {{ ins.progreso }}%
+          </span>
+        </div>
+
+        <form method="post" action="/curso/{{ ins.curso.id }}/progreso/">
+          {% csrf_token %}
+          <div style="display:flex; gap:6px; align-items:center;">
+            <input
+              type="range"
+              name="progreso"
+              min="0" max="100" step="10"
+              value="{{ ins.progreso }}"
+              style="flex:1; accent-color:var(--white);"
+              oninput="this.nextElementSibling.textContent = this.value + '%'"
+            />
+            <span style="font-family:'Space Mono',monospace; font-size:10px; color:var(--text-3); min-width:30px; text-align:right;">
+              {{ ins.progreso }}%
+            </span>
+            <button type="submit" class="xo-btn xo-btn-sm" title="Guardar">
+              <i class="ti ti-device-floppy"></i>
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+  {% endfor %}
+</div>
+{% else %}
+<div class="xo-empty" style="margin-bottom:40px;">
+  <p>No estás inscrito en ningún curso.<br>
+  <a href="/" style="color:var(--text-2); text-decoration:none;">Explorar →</a></p>
+</div>
+{% endif %}
+
+<!-- Panel instructor -->
+{% if user.es_instructor %}
+<hr class="divider" />
+<div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:16px;">
+  <div>
+    <h2 style="font-size:16px; font-weight:500; color:var(--white); margin:0;">Mis cursos publicados</h2>
+  </div>
+  <a href="/crear-curso/" class="xo-btn xo-btn-primary xo-btn-sm">
+    <i class="ti ti-plus"></i> Nuevo curso
+  </a>
+</div>
+
+{% if mis_cursos_creados %}
+<div class="row g-3">
+  {% for curso in mis_cursos_creados %}
+  <div class="col-xl-3 col-lg-4 col-md-6">
+    <div class="xo-card" style="overflow:hidden;">
+      {% if curso.imagen %}
+      <img src="{{ curso.imagen.url }}" class="xo-course-img" style="height:120px;" />
+      {% else %}
+      <div class="xo-course-img-placeholder" style="height:120px;">
+        <i class="ti ti-book" style="font-size:26px;"></i>
+      </div>
+      {% endif %}
+      <div class="xo-card-body">
+        <h3 style="font-size:13px; font-weight:500; color:var(--white); margin:0 0 6px;">{{ curso.titulo }}</h3>
+        <p style="font-size:11px; color:var(--text-3); margin-bottom:12px;">
+          <i class="ti ti-users" style="font-size:11px;"></i> {{ curso.total_inscritos }} estudiantes
+          · {{ curso.fecha_creacion|date:"d M" }}
+        </p>
+        <div style="display:flex; gap:6px;">
+          <a href="/curso/{{ curso.id }}/" class="xo-btn xo-btn-sm" style="flex:1;">
+            <i class="ti ti-eye"></i> Ver
+          </a>
+          <a href="/curso/{{ curso.id }}/editar/" class="xo-btn xo-btn-sm" style="flex:1;">
+            <i class="ti ti-edit"></i> Editar
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+  {% endfor %}
+</div>
+{% else %}
+<div class="xo-empty">
+  <i class="ti ti-file-plus"></i>
+  <p>No has publicado cursos aún.</p>
+</div>
+{% endif %}
+{% endif %}
 
 {% endblock %}

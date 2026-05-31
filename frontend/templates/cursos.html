@@ -1,29 +1,78 @@
-{% extends 'base.html' %} {% block content %}
+{% extends 'base.html' %}
+{% block page_title %}Explorar{% endblock %}
+{% block topbar_title %}Explorar cursos{% endblock %}
 
-<h3 class="mb-4">Explorar cursos</h3>
+{% block topbar_search %}
+<form method="get" action="/" class="d-flex align-items-center">
+  <div class="xo-search-wrap">
+    <i class="ti ti-search" aria-hidden="true"></i>
+    <input
+      type="text"
+      name="q"
+      value="{{ query }}"
+      class="xo-search"
+      placeholder="Buscar curso..."
+    />
+  </div>
+</form>
+{% endblock %}
 
-<div class="row">
+{% block content %}
+<div class="d-flex align-items-flex-end justify-content-space-between mb-24 gap-16">
+  <div>
+    <h1 class="fs-20 fw-500 m-0">
+      {% if query %}Resultados para "{{ query }}"{% else %}Todos los cursos{% endif %}
+    </h1>
+  </div>
+  <span class="font-mono fs-11 text-3 white-space-nowrap">
+    {{ total }} curso{% if total != 1 %}s{% endif %}
+  </span>
+</div>
+
+{% if cursos %}
+<div class="row g-3">
   {% for curso in cursos %}
-  <div class="col-md-3">
-    <div class="card shadow-sm mb-4">
-      <a
-        href="/curso/{{ curso.id }}/"
-        style="text-decoration: none; color: inherit"
-      >
+  <div class="col-xl-3 col-lg-4 col-md-6">
+    <div class="xo-card overflow-hidden h-100 d-flex flex-column">
+
+      <a href="/curso/{{ curso.id }}/" class="text-decoration-none d-block flex-shrink-0">
         {% if curso.imagen %}
-        <img src="{{ curso.imagen.url }}" />
+        <img src="{{ curso.imagen.url }}" class="xo-course-img h-150" />
+        {% else %}
+        <div class="xo-course-img-placeholder h-150 d-flex align-items-center justify-content-center">
+          <i class="ti ti-book fs-32"></i>
+        </div>
         {% endif %}
       </a>
-      <div class="card-body">
-        <h6 class="fw-bold">{{ curso.titulo }}</h6>
-        <p class="text-muted small">{{ curso.descripcion|truncatewords:10 }}</p>
+
+      <div class="xo-card-body flex-1 d-flex flex-column">
+        <div class="xo-card-label">{{ curso.instructor.username }}</div>
+        <a href="/curso/{{ curso.id }}/" class="text-decoration-none">
+          <h3 class="fs-14 fw-500  mt-4 mb-8 lh-14">
+            {{ curso.titulo }}
+          </h3>
+        </a>
+        <p class="fs-12 text-2 mb-14 lh-15 flex-1">
+          {{ curso.descripcion|truncatewords:14 }}
+        </p>
+
+        <div class="d-flex align-items-center justify-content-space-between mb-12">
+          <span class="font-mono fs-10 text-3">
+            <i class="ti ti-users fs-11 va--1px"></i>
+            {{ curso.total_inscritos }} inscritos
+          </span>
+          <span class="font-mono fs-10 text-3">
+            {{ curso.fecha_creacion|date:"d M Y" }}
+          </span>
+        </div>
 
         {% if user.is_authenticated %}
-        <a
-          href="/inscribirse/{{ curso.id }}/"
-          class="btn btn-primary btn-sm w-100"
-        >
-          Inscribirse
+        <a href="/inscribirse/{{ curso.id }}/" class="xo-btn xo-btn-primary xo-btn-sm w-100">
+          <i class="ti ti-plus"></i> Inscribirse
+        </a>
+        {% else %}
+        <a href="/login/?next=/curso/{{ curso.id }}/" class="xo-btn xo-btn-sm w-100">
+          <i class="ti ti-lock"></i> Inicia sesión
         </a>
         {% endif %}
       </div>
@@ -32,4 +81,16 @@
   {% endfor %}
 </div>
 
+{% else %}
+<div class="xo-empty">
+  <p>
+    {% if query %}
+    No se encontraron cursos para "{{ query }}".
+    <a href="/" class="text-2 text-decoration-none"> Ver todos →</a>
+    {% else %}
+    No hay cursos publicados aún.
+    {% endif %}
+  </p>
+</div>
+{% endif %}
 {% endblock %}
