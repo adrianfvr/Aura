@@ -1,153 +1,224 @@
-# AURA — Plataforma de Cursos
+# AURA
 
-> Plataforma web para gestión de cursos desarrollada con Django. Permite a profesores/instructores
-> publicar cursos y a estudiantes explorarlos e inscribirse
-
----
-
-## 🛠️ Tecnologías
-
-| Tecnología | Versión |
-|---|---|
-| Python | 3.11+ |
-| Django | 5.2 |
-| Base de datos | SQLite (desarrollo) |
-| CSS Framework | Bootstrap 5.3 |
-| Imágenes | Pillow |
+> Plataforma web desarrollada con Django que permite a instructores publicar cursos y a estudiantes explorar, inscribirse y realizar seguimiento de su progreso de aprendizaje.
 
 ---
 
-## ⚡ Instalación
+## Descripción
+
+AURA es una plataforma educativa desarrollada como proyecto académico utilizando Django. El sistema implementa autenticación personalizada, gestión de cursos, seguimiento de progreso, estadísticas de usuario y un panel de control intuitivo.
+
+Cada usuario puede crear una cuenta, explorar cursos disponibles, inscribirse y visualizar su avance. Los instructores cuentan con herramientas para publicar y administrar cursos dentro de la plataforma.
+
+---
+
+## Características
+
+### 👤 Gestión de usuarios
+### 📚 Gestión de cursos
+### 🎯 Sistema de inscripciones
+### 📊 Dashboard personal
+### 🔎 Exploración de cursos
+### 🔔 Experiencia de usuario
+
+---
+
+## Tecnologías utilizadas
+
+| Tecnología | Versión    |
+| ---------- | ---------- |
+| Python     | 3.11+      |
+| Django     | 5.2        |
+| SQLite     | Desarrollo |
+| Bootstrap  | 5.3        |
+| Pillow     | 12.2       |
+| HTML5      | -          |
+| CSS3       | -          |
+| JavaScript | -          |
+
+---
+
+## Instalación
 
 ### 1. Clonar el repositorio
 
 ```bash
-git clone https://github.com/tu-usuario/plataforma.git
-cd plataforma
+git clone https://github.com/TU-USUARIO/AURA.git
+cd AURA
 ```
 
-### 2. Crear y activar entorno virtual
+### 2. Crear entorno virtual
 
 ```bash
 python -m venv env
 ```
 
-```bash
-# Windows
-env\Scripts\activate
+### 3. Activar entorno virtual
 
-# Mac / Linux
+**Windows**
+
+```bash
+env\Scripts\activate
+```
+
+**Linux / macOS**
+
+```bash
 source env/bin/activate
 ```
 
-### 3. Instalar las dependencias
+### 4. Instalar dependencias
 
 ```bash
-pip install django pillow
+pip install -r requirements.txt
 ```
 
-### 4. Aplicar las migraciones
+### 5. Aplicar migraciones
 
 ```bash
 python manage.py migrate
 ```
 
-### 5. Crear un superusuario
-
-> [!NOTE]
-> Es opcional, pero necesario para acceder al panel `/admin/` y asignar el rol de instructor a los usuarios.
+### 6. Crear superusuario (opcional)
 
 ```bash
 python manage.py createsuperuser
 ```
+> [!NOTE]
+> Necesario únicamente para acceder al panel administrativo y asignar permisos de instructor.
 
-### 6. Iniciar el servidor
+### 7. Ejecutar el servidor
 
 ```bash
 python manage.py runserver
 ```
 
-> [!TIP]
-> Abrir el navegador en `http://127.0.0.1:8000` para ver la plataforma en funcionamiento.
+Abrir en:
+
+```text
+http://127.0.0.1:8000
+```
 
 ---
 
-## Rutas disponibles
+## Rutas principales
 
-| Ruta | Descripción |
-|---|---|
-| `/` | Catálogo de cursos |
-| `/registro/` | Crear una cuenta nueva |
-| `/login/` | Iniciar sesión |
-| `/dashboard/` | Ver cursos inscritos |
-| `/crear-curso/` | Crear un curso *(solo instructores)* |
-| `/admin/` | Panel de administración |
+| Ruta            | Descripción           |
+| --------------- | --------------------- |
+| `/`             | Catálogo de cursos    |
+| `/registro/`    | Registro de usuario   |
+| `/login/`       | Inicio de sesión      |
+| `/dashboard/`   | Dashboard del usuario |
+| `/crear-curso/` | Crear curso           |
+| `/admin/`       | Administración Django |
 
 ---
 
-## Roles de usuario
+## ..Roles del sistema
 
-> [!IMPORTANT]
-> AURA maneja dos roles diferenciados. El rol de instructor **no se puede activar desde el registro**, requiere acceso al panel de administración.
+### Estudiante
 
-- **Estudiante** — se registra normalmente desde `/registro/` y puede inscribirse en cualquier curso disponible.
-- **Instructor** — un administrador debe activar el campo `es_instructor = True` desde el panel `/admin/` en el modelo de usuario.
+* Registrarse.
+* Iniciar sesión.
+* Explorar cursos.
+* Inscribirse.
+* Gestionar progreso.
+* Visualizar estadísticas.
+
+### Instructor
+
+Además de las funciones del estudiante:
+
+* Crear cursos.
+* Editar cursos.
+* Gestionar contenido publicado.
+  
+> [!NOTE]
+> El rol de instructor debe ser asignado por un administrador desde el panel de administración.
 
 ---
 
 ## 📁 Estructura del proyecto
 
-```
-plataforma/
-├── cursos/           # Modelos, vistas y formularios de cursos
-├── dashboard/        # Panel de control del usuario
-├── usuarios/         # Registro, login y modelo de usuario
+```text
+AURA/
+├── cursos/
+├── dashboard/
+├── usuarios/
 ├── frontend/
-│   └── templates/    # Plantillas HTML (base, cursos, dashboard, etc.)
-├── media/            # Imágenes subidas por los usuarios
-├── plataforma/       # Configuración central (settings, urls)
-└── manage.py
+│   ├── static/
+│   │   └── css/
+│   │       └── main.css
+│   └── templates/
+│       ├── base.html
+│       ├── cursos.html
+│       ├── detalle_curso.html
+│       ├── dashboard.html
+│       ├── crear_curso.html
+│       ├── login.html
+│       ├── registro.html
+│       └── 404.html
+├── media/
+├── plataforma/
+├── manage.py
+├── requirements.txt
+└── README.md
 ```
 
-> [!NOTE]
-> Los estilos CSS están actualmente definidos dentro de `base.html`. En futuras versiones se migrarán a un archivo estático dedicado.
+---
+
+## 📸 Capturas
+
+### Registro
+<img width="1545" height="804" alt="imagen" src="https://github.com/user-attachments/assets/036e3293-6d2b-45bc-ac88-f9adda03d09f" />
+
+### Inicio de Sesión
+<img width="1542" height="802" alt="imagen" src="https://github.com/user-attachments/assets/7c98676b-3d90-41d8-b5ac-2c8bab056306" />
+
+### Dashboard
+<img width="1522" height="792" alt="imagen" src="https://github.com/user-attachments/assets/d3d4e830-a8e1-48e0-ae32-64d19c9ab391" />
+
+### Explorar Cursos
+<img width="1534" height="569" alt="imagen" src="https://github.com/user-attachments/assets/e8298044-7093-45b9-b734-71637fe426ce" />
+
+### Crear Curso
+<img width="1541" height="716" alt="imagen" src="https://github.com/user-attachments/assets/cbb6973e-59d6-4df2-9324-e3c484c602f2" />
+
+### Detalle del Curso
+<img width="1536" height="767" alt="imagen" src="https://github.com/user-attachments/assets/52ea5e80-8f68-4ca2-a4bd-d1278b729c59" />
 
 ---
 
-## Capturas
-> Inicio Sesión
-<img width="500" alt="login" src="https://github.com/user-attachments/assets/14b13117-57c6-462e-91e4-78b26474b1d0" />
+## Información almacenada
 
-> Dashboard
-<img width="500" alt="dashboard" src="https://github.com/user-attachments/assets/44969ffe-0fef-420f-b068-fca91d6fa689" />
+La plataforma mantiene información persistente sobre:
 
-> Mis Cursos
-<img width="500" alt="mis-cursos" src="https://github.com/user-attachments/assets/b36e3c28-2fe5-41d2-b98c-0e5f5247d846" />
-
-> Detalle Curso
-<img width="500" alt="detalle-curso" src="https://github.com/user-attachments/assets/b4f86361-12df-48e4-9de0-f2b38f96e6db" />
-
-> Crear Curso
-<img width="500" alt="crear-curso" src="https://github.com/user-attachments/assets/72b1f784-1406-4edf-8d17-884f16c72b0b" />
-
+* Usuarios registrados.
+* Información de perfil.
+* Cursos publicados.
+* Instructor creador de cada curso.
+* Fecha de creación.
+* Inscripciones.
+* Progreso individual por curso.
+* Estado de completado.
+* Actividad reciente.
 
 ---
 
-## Estado del proyecto
+## Mejoras futuras
 
+* [ ] Módulos y lecciones por curso.
+* [ ] Certificados de finalización.
+* [ ] Sistema de comentarios.
+* [ ] Calificaciones y reseñas.
+* [ ] Paginación avanzada.
+* [ ] PostgreSQL para producción.
+* [ ] Despliegue en la nube.
+* [ ] Notificaciones por correo.
+* [ ] Recuperación de contraseña.
+
+---
+
+## ⚠️ Estado del proyecto
 > [!WARNING]
-> El proyecto está actualmente en desarrollo. No se recomienda usarlo en producción sin antes configurar PostgreSQL, variables de entorno y un servidor.
-
-- [x] Registro y autenticación de usuarios
-- [x] Catálogo de cursos con búsqueda
-- [x] Inscripción a cursos
-- [x] Creación de cursos con imagen de portada
-- [x] Dashboard personal
-- [ ] Progreso real de cursos *(actualmente estático al 60%)*
-- [ ] Módulos y lecciones por curso
-- [ ] Despliegue en producción (PostgreSQL + Nginx)
-- [ ] Paginación y filtros avanzados
-- [ ] Notificaciones por correo
-
----
-
+> Actualmente en Desarollo
